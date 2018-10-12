@@ -1,4 +1,11 @@
 cmake_minimum_required(VERSION 3.2)
+
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.23.54.tar.gz"
+    SHA1 "64ae727ebaec586c84da5d69e5c37b5962baccd6"
+)
+
 project(tvm C CXX)
 
 # Utility functions
