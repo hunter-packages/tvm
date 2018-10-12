@@ -245,6 +245,18 @@ target_include_directories(
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/nnvm/include>"
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 
+hunter_add_package(HalideIR)
+find_package(HalideIR CONFIG REQUIRED)
+target_link_libraries(tvm PUBLIC HalideIR::HalideIR)
+
+hunter_add_package(dlpack)
+find_package(dlpack CONFIG REQUIRED)
+target_link_libraries(tvm PUBLIC dlpack::dlpack)
+
+hunter_add_package(dmlc-core)
+find_package(dmlc CONFIG REQUIRED)
+target_link_libraries(tvm_runtime PUBLIC dmlc::dmlc)
+
 # Tests
 set(TEST_EXECS "")
 file(GLOB TEST_SRCS tests/cpp/*.cc)
