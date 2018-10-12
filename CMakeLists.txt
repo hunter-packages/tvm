@@ -6,7 +6,7 @@ HunterGate(
     SHA1 "1d841ca74150c92054896a7f6d88a123dd9e615d"
 )
 
-project(tvm C CXX)
+project(tvm VERSION 0.5)
 
 # Utility functions
 include(cmake/util/Util.cmake)
