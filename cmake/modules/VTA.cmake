@@ -51,6 +51,7 @@ elseif(PYTHON)
   endif()
 
   target_include_directories(vta PUBLIC vta/include)
+  target_link_libraries(vta PUBLIC dmlc::dmlc)
 
   foreach(__def ${VTA_DEFINITIONS})
     string(SUBSTRING ${__def} 3 -1 __strip_def)
