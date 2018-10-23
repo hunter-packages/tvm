@@ -207,15 +207,15 @@ target_link_libraries(nnvm_compiler PUBLIC tvm)
 # Related headers
 target_include_directories(
   tvm
-  PUBLIC "$<BUILD_INTERFACE:3rdparty/HalideIR/src>"
-  PUBLIC "$<BUILD_INTERFACE:topi/include>")
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/3rdparty/HalideIR/src>"
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 target_include_directories(
   tvm_topi
-  PUBLIC "$<BUILD_INTERFACE:topi/include>")
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 target_include_directories(
   nnvm_compiler
-  PUBLIC "$<BUILD_INTERFACE:nnvm/include>"
-  PUBLIC "$<BUILD_INTERFACE:topi/include>")
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/nnvm/include>"
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 
 hunter_add_package(HalideIR)
 find_package(HalideIR CONFIG REQUIRED)
