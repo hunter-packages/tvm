@@ -207,15 +207,15 @@ target_link_libraries(nnvm_compiler tvm)
 # Related headers
 target_include_directories(
   tvm
-  PUBLIC "3rdparty/HalideIR/src"
-  PUBLIC "topi/include")
+  PUBLIC "$<BUILD_INTERFACE:3rdparty/HalideIR/src>"
+  PUBLIC "$<BUILD_INTERFACE:topi/include>")
 target_include_directories(
   tvm_topi
-  PUBLIC "topi/include")
+  PUBLIC "$<BUILD_INTERFACE:topi/include>")
 target_include_directories(
   nnvm_compiler
-  PUBLIC "nnvm/include"
-  PUBLIC "topi/include")
+  PUBLIC "$<BUILD_INTERFACE:nnvm/include>"
+  PUBLIC "$<BUILD_INTERFACE:topi/include>")
 
 hunter_add_package(HalideIR)
 find_package(HalideIR CONFIG REQUIRED)
