@@ -44,6 +44,7 @@ tvm_option(USE_RTTI "Build with RTTI" ON)
 tvm_option(USE_MSVC_MT "Build with MT" OFF)
 tvm_option(INSTALL_DEV "Install compiler infrastructure" OFF)
 tvm_option(BUILD_NNVM_ONLY "Build only nnvm" OFF)
+tvm_option(BUILD_NNVM_REDUCED "Build nnvm reduced version" OFF)
 
 # Contrib library options
 tvm_option(USE_BLAS "The blas library to be linked" none)
@@ -125,6 +126,14 @@ if(NOT MSVC)
   list(APPEND COMPILER_SRCS ${COMPILER_VERILOG_SRCS})
 endif()
 
+if(BUILD_NNVM_REDUCED)
+  file(GLOB_RECURSE NNVM_COMPILER_SRCS
+      nnvm/src/c_api/*.cc
+      nnvm/src/core/*.cc
+      nnvm/src/pass/*.cc
+      )
+else()
+
 file(GLOB_RECURSE NNVM_COMPILER_SRCS
     nnvm/src/c_api/*.cc
     nnvm/src/core/*.cc
@@ -132,6 +141,8 @@ file(GLOB_RECURSE NNVM_COMPILER_SRCS
     nnvm/src/compiler/*.cc
     nnvm/src/top/*.cc
     )
+
+endif()
 
 file(GLOB TOPI_SRCS
     topi/src/*.cc
