@@ -227,14 +227,16 @@ target_include_directories(
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/nnvm/include>"
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 
-if(NOT BUILD_NNVM_ONLY)
-
 hunter_add_package(HalideIR)
 find_package(HalideIR CONFIG REQUIRED)
-target_link_libraries(tvm PUBLIC HalideIR::HalideIR)
 
 hunter_add_package(dlpack)
 find_package(dlpack CONFIG REQUIRED)
+
+if(NOT BUILD_NNVM_ONLY)
+
+target_link_libraries(tvm PUBLIC HalideIR::HalideIR)
+
 target_link_libraries(tvm PUBLIC dlpack::dlpack)
 
 endif()
@@ -249,7 +251,13 @@ target_link_libraries(tvm_topi PUBLIC dmlc::dmlc)
 
 endif()
 
-target_link_libraries(nnvm_compiler PUBLIC dmlc::dmlc)
+target_link_libraries(
+    nnvm_compiler
+    PUBLIC
+    dmlc::dmlc
+    HalideIR::HalideIR
+    dlpack::dlpack
+)
 
 # Tests
 set(TEST_EXECS "")
