@@ -3,7 +3,7 @@ find_program(PYTHON NAMES python python3 python3.6)
 
 if(MSVC)
   message(STATUS "VTA build is skipped in Windows..")
-elseif(PYTHON)
+elseif(PYTHON AND NOT BUILD_NNVM_ONLY)
   set(VTA_CONFIG ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/vta/config/vta_config.py)
 
   if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/vta_config.json)

@@ -43,6 +43,7 @@ tvm_option(USE_SGX "Build with SGX" OFF)
 tvm_option(USE_RTTI "Build with RTTI" ON)
 tvm_option(USE_MSVC_MT "Build with MT" OFF)
 tvm_option(INSTALL_DEV "Install compiler infrastructure" OFF)
+tvm_option(BUILD_NNVM_ONLY "Build only nnvm" OFF)
 
 # Contrib library options
 tvm_option(USE_BLAS "The blas library to be linked" none)
@@ -189,6 +190,8 @@ include(cmake/modules/contrib/Random.cmake)
 include(cmake/modules/contrib/Sort.cmake)
 include(cmake/modules/contrib/NNPack.cmake)
 
+if(NOT BUILD_NNVM_ONLY)
+
 add_library(tvm SHARED ${COMPILER_SRCS} ${RUNTIME_SRCS})
 add_library(tvm_topi SHARED ${TOPI_SRCS})
 add_library(tvm_runtime SHARED ${RUNTIME_SRCS})
@@ -197,12 +200,16 @@ if(NOT USE_SGX STREQUAL "OFF")
   add_dependencies(tvm_runtime sgx_edl tvm_t)
   install(TARGETS tvm_t ARCHIVE DESTINATION lib${LIB_SUFFIX})
 endif()
+
+endif()
+
 add_library(nnvm_compiler SHARED ${NNVM_COMPILER_SRCS})
 
+if(NOT BUILD_NNVM_ONLY)
+
 target_link_libraries(tvm ${TVM_LINKER_LIBS} ${TVM_RUNTIME_LINKER_LIBS})
-target_link_libraries(tvm_topi tvm ${TVM_LINKER_LIBS} ${TVM_RUNTIME_LINKER_LIBS})
+target_link_libraries(tvm_topi PUBLIC tvm ${TVM_LINKER_LIBS} ${TVM_RUNTIME_LINKER_LIBS})
 target_link_libraries(tvm_runtime ${TVM_RUNTIME_LINKER_LIBS})
-target_link_libraries(nnvm_compiler PUBLIC tvm)
 
 # Related headers
 target_include_directories(
@@ -212,10 +219,15 @@ target_include_directories(
 target_include_directories(
   tvm_topi
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
+
+endif()
+
 target_include_directories(
   nnvm_compiler
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/nnvm/include>"
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
+
+if(NOT BUILD_NNVM_ONLY)
 
 hunter_add_package(HalideIR)
 find_package(HalideIR CONFIG REQUIRED)
@@ -225,9 +237,19 @@ hunter_add_package(dlpack)
 find_package(dlpack CONFIG REQUIRED)
 target_link_libraries(tvm PUBLIC dlpack::dlpack)
 
+endif()
+
 hunter_add_package(dmlc-core)
 find_package(dmlc CONFIG REQUIRED)
+
+if(NOT BUILD_NNVM_ONLY)
+
 target_link_libraries(tvm_runtime PUBLIC dmlc::dmlc)
+target_link_libraries(tvm_topi PUBLIC dmlc::dmlc)
+
+endif()
+
+target_link_libraries(nnvm_compiler PUBLIC dmlc::dmlc)
 
 # Tests
 set(TEST_EXECS "")
@@ -248,8 +270,12 @@ if(GTEST_LIB)
   add_custom_target(cpptest DEPENDS ${TEST_EXECS})
 endif()
 
+if(NOT BUILD_NNVM_ONLY)
+
 # Custom targets
 add_custom_target(runtime DEPENDS tvm_runtime)
+
+endif()
 
 ### Installation (https://github.com/forexample/package-example) {
 
@@ -297,11 +323,16 @@ install(
 ### }
 
 # Installation rulse
+if(NOT BUILD_NNVM_ONLY)
 install(TARGETS tvm_runtime EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION lib${LIB_SUFFIX})
+endif()
 install(TARGETS nnvm_compiler EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION lib${LIB_SUFFIX})
 
 if (INSTALL_DEV)
+  if(NOT BUILD_NNVM_ONLY)
   install(TARGETS tvm EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION lib${LIB_SUFFIX})
+  endif()
+
   install(
     DIRECTORY "include/." DESTINATION "include"
     FILES_MATCHING
