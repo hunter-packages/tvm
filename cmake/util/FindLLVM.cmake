@@ -33,6 +33,7 @@
 macro(find_llvm use_llvm)
   set(LLVM_CONFIG ${use_llvm})
   if(LLVM_CONFIG STREQUAL "ON")
+    hunter_add_package(LLVM)
     find_package(LLVM REQUIRED CONFIG)
     llvm_map_components_to_libnames(LLVM_LIBS all)
     list (FIND LLVM_LIBS "LLVM" _llvm_dynlib_index)
