@@ -207,6 +207,8 @@ target_link_libraries(nnvm_compiler PUBLIC tvm)
 find_package(Threads REQUIRED)
 target_link_libraries(tvm PUBLIC Threads::Threads)
 
+target_link_libraries(tvm PUBLIC ${CMAKE_DL_LIBS})
+
 # Related headers
 target_include_directories(
   tvm
