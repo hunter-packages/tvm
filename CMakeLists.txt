@@ -249,6 +249,9 @@ target_link_libraries(tvm_topi PUBLIC tvm ${TVM_LINKER_LIBS} ${TVM_RUNTIME_LINKE
 target_link_libraries(tvm_runtime PUBLIC ${TVM_RUNTIME_LINKER_LIBS})
 target_link_libraries(nnvm_compiler PUBLIC tvm)
 
+find_package(Threads REQUIRED)
+target_link_libraries(tvm PUBLIC Threads::Threads)
+
 # Related headers
 target_include_directories(
   tvm

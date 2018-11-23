@@ -8,5 +8,7 @@ if(@USE_LLVM@)
   find_package(LLVM CONFIG REQUIRED)
 endif()
 
+find_package(Threads REQUIRED)
+
 include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
 check_required_components("@PROJECT_NAME@")
