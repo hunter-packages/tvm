@@ -44,6 +44,7 @@ tvm_option(USE_SGX "Build with SGX" OFF)
 tvm_option(USE_RTTI "Build with RTTI" ON)
 tvm_option(USE_MSVC_MT "Build with MT" OFF)
 tvm_option(INSTALL_DEV "Install compiler infrastructure" OFF)
+tvm_option(INSTALL_NNVM_SOURCES "Install NNVM sources" OFF)
 
 # Contrib library options
 tvm_option(USE_BLAS "The blas library to be linked" none)
@@ -144,6 +145,23 @@ file(GLOB_RECURSE NNVM_COMPILER_SRCS
     nnvm/src/compiler/*.cc
     nnvm/src/top/*.cc
     )
+
+if(INSTALL_NNVM_SOURCES)
+  file(GLOB_RECURSE x nnvm/src/c_api/*.cc nnvm/src/c_api/*.h)
+  install(FILES ${x} DESTINATION src/tvm/nnvm/c_api)
+
+  file(GLOB_RECURSE x nnvm/src/core/*.cc)
+  install(FILES ${x} DESTINATION src/tvm/nnvm/core)
+
+  file(GLOB_RECURSE x nnvm/src/pass/*.cc nnvm/src/pass/*.h)
+  install(FILES ${x} DESTINATION src/tvm/nnvm/pass)
+
+  file(GLOB_RECURSE x nnvm/src/compiler/*.cc nnvm/src/compiler/*.h)
+  install(FILES ${x} DESTINATION src/tvm/nnvm/compiler)
+
+  file(GLOB_RECURSE x nnvm/src/top/*.cc)
+  install(FILES ${x} DESTINATION src/tvm/nnvm/top)
+endif()
 
 file(GLOB TOPI_SRCS
     topi/src/*.cc
