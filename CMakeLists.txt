@@ -60,9 +60,12 @@ tvm_option(USE_ANTLR "Build with ANTLR for Relay parsing" OFF)
 
 # include directories
 include_directories("include")
+
+if(NOT HUNTER_ENABLED)
 include_directories("3rdparty/dlpack/include")
 include_directories("3rdparty/dmlc-core/include")
 include_directories("3rdparty/rang/include")
+endif()
 include_directories("3rdparty/compiler-rt")
 
 # initial variables
@@ -166,8 +169,10 @@ endif()
 file(GLOB TOPI_SRCS
     topi/src/*.cc
 )
+if(NOT HUNTER_ENABLED)
 file(GLOB_RECURSE HALIDEIR_SRCS 3rdparty/HalideIR/src/*.cpp)
 list(APPEND COMPILER_SRCS ${HALIDEIR_SRCS})
+endif()
 file(GLOB RUNTIME_SRCS
   src/runtime/*.cc
   src/runtime/vm/*.cc
@@ -257,8 +262,14 @@ target_link_libraries(tvm PUBLIC ${CMAKE_DL_LIBS})
 # Related headers
 target_include_directories(
   tvm
-  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/3rdparty/HalideIR/src>"
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
+
+if(NOT HUNTER_ENABLED)
+target_include_directories(
+  tvm
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/3rdparty/HalideIR/src>")
+endif()
+
 target_include_directories(
   tvm_topi
   PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
