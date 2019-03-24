@@ -286,6 +286,10 @@ hunter_add_package(dlpack)
 find_package(dlpack CONFIG REQUIRED)
 target_link_libraries(tvm PUBLIC dlpack::dlpack)
 
+hunter_add_package(rang)
+find_package(rang CONFIG REQUIRED)
+target_link_libraries(tvm PUBLIC rang::rang)
+
 hunter_add_package(dmlc-core)
 find_package(dmlc CONFIG REQUIRED)
 target_link_libraries(tvm_runtime PUBLIC dmlc::dmlc)
