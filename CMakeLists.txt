@@ -217,15 +217,15 @@ target_link_libraries(nnvm_compiler tvm)
 # Related headers
 target_include_directories(
   tvm
-  PUBLIC "3rdparty/HalideIR/src"
-  PUBLIC "topi/include")
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/3rdparty/HalideIR/src>"
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 target_include_directories(
   tvm_topi
-  PUBLIC "topi/include")
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 target_include_directories(
   nnvm_compiler
-  PUBLIC "nnvm/include"
-  PUBLIC "topi/include")
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/nnvm/include>"
+  PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/topi/include>")
 
 # Tests
 set(TEST_EXECS "")
