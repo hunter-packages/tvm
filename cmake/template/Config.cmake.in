@@ -2,6 +2,7 @@
 
 find_package(HalideIR CONFIG REQUIRED)
 find_package(dlpack CONFIG REQUIRED)
+find_package(rang CONFIG REQUIRED)
 find_package(dmlc CONFIG REQUIRED)
 
 if(@USE_LLVM@)
