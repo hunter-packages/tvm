@@ -1,8 +1,12 @@
 @PACKAGE_INIT@
 
-find_package(HalideIR CONFIG REQUIRED)
 find_package(dlpack CONFIG REQUIRED)
-find_package(rang CONFIG REQUIRED)
+
+if(NOT "@TVM_BUILD_RUNTIME_ONLY@")
+  find_package(HalideIR CONFIG REQUIRED)
+  find_package(rang CONFIG REQUIRED)
+endif()
+
 find_package(dmlc CONFIG REQUIRED)
 
 if(@USE_LLVM@)

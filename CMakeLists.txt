@@ -223,6 +223,9 @@ include(cmake/modules/contrib/Sort.cmake)
 include(cmake/modules/contrib/NNPack.cmake)
 include(cmake/modules/contrib/HybridDump.cmake)
 
+hunter_add_package(dlpack)
+find_package(dlpack CONFIG REQUIRED)
+
 if(NOT TVM_BUILD_RUNTIME_ONLY)
 add_library(tvm SHARED ${COMPILER_SRCS} ${RUNTIME_SRCS})
 add_library(tvm_topi SHARED ${TOPI_SRCS})
@@ -273,8 +276,6 @@ hunter_add_package(HalideIR)
 find_package(HalideIR CONFIG REQUIRED)
 target_link_libraries(tvm PUBLIC HalideIR::HalideIR)
 
-hunter_add_package(dlpack)
-find_package(dlpack CONFIG REQUIRED)
 target_link_libraries(tvm PUBLIC dlpack::dlpack)
 
 hunter_add_package(rang)
@@ -284,7 +285,7 @@ endif()
 
 hunter_add_package(dmlc-core)
 find_package(dmlc CONFIG REQUIRED)
-target_link_libraries(tvm_runtime PUBLIC dmlc::dmlc)
+target_link_libraries(tvm_runtime PUBLIC dmlc::dmlc dlpack::dlpack)
 
 # Tests
 set(TEST_EXECS "")
