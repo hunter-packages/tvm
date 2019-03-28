@@ -44,6 +44,7 @@ tvm_option(USE_RTTI "Build with RTTI" ON)
 tvm_option(USE_MSVC_MT "Build with MT" OFF)
 tvm_option(INSTALL_DEV "Install compiler infrastructure" OFF)
 tvm_option(INSTALL_NNVM_SOURCES "Install NNVM sources" OFF)
+tvm_option(TVM_BUILD_RUNTIME_ONLY "Only build tvm_runtime library" OFF)
 
 # Contrib library options
 tvm_option(USE_BLAS "The blas library to be linked" none)
@@ -222,19 +223,26 @@ include(cmake/modules/contrib/Sort.cmake)
 include(cmake/modules/contrib/NNPack.cmake)
 include(cmake/modules/contrib/HybridDump.cmake)
 
+if(NOT TVM_BUILD_RUNTIME_ONLY)
 add_library(tvm SHARED ${COMPILER_SRCS} ${RUNTIME_SRCS})
 add_library(tvm_topi SHARED ${TOPI_SRCS})
+endif()
 add_library(tvm_runtime SHARED ${RUNTIME_SRCS})
 if(NOT USE_SGX STREQUAL "OFF")
   add_dependencies(tvm sgx_edl)
   add_dependencies(tvm_runtime sgx_edl tvm_t)
   install(TARGETS tvm_t ARCHIVE DESTINATION lib${LIB_SUFFIX})
 endif()
+if(NOT TVM_BUILD_RUNTIME_ONLY)
 add_library(nnvm_compiler SHARED ${NNVM_COMPILER_SRCS})
+endif()
 
+if(NOT TVM_BUILD_RUNTIME_ONLY)
 target_link_libraries(tvm PUBLIC ${TVM_LINKER_LIBS} ${TVM_RUNTIME_LINKER_LIBS})
 target_link_libraries(tvm_topi PUBLIC tvm ${TVM_LINKER_LIBS} ${TVM_RUNTIME_LINKER_LIBS})
+endif()
 target_link_libraries(tvm_runtime PUBLIC ${TVM_RUNTIME_LINKER_LIBS})
+if(NOT TVM_BUILD_RUNTIME_ONLY)
 target_link_libraries(nnvm_compiler PUBLIC tvm)
 
 find_package(Threads REQUIRED)
@@ -272,6 +280,7 @@ target_link_libraries(tvm PUBLIC dlpack::dlpack)
 hunter_add_package(rang)
 find_package(rang CONFIG REQUIRED)
 target_link_libraries(tvm PUBLIC rang::rang)
+endif()
 
 hunter_add_package(dmlc-core)
 find_package(dmlc CONFIG REQUIRED)
@@ -296,8 +305,10 @@ if(GTEST_LIB)
   add_custom_target(cpptest DEPENDS ${TEST_EXECS})
 endif()
 
+if(NOT TVM_BUILD_RUNTIME_ONLY)
 # Custom targets
 add_custom_target(runtime DEPENDS tvm_runtime)
+endif()
 
 ### Installation (https://github.com/forexample/package-example) {
 
@@ -346,10 +357,14 @@ install(
 
 # Installation rulse
 install(TARGETS tvm_runtime EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION lib${LIB_SUFFIX})
+if(NOT TVM_BUILD_RUNTIME_ONLY)
 install(TARGETS nnvm_compiler EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION lib${LIB_SUFFIX})
+endif()
 
 if (INSTALL_DEV)
+  if(NOT TVM_BUILD_RUNTIME_ONLY)
   install(TARGETS tvm EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION lib${LIB_SUFFIX})
+  endif()
   install(
     DIRECTORY "include/." DESTINATION "include"
     FILES_MATCHING
@@ -385,9 +400,15 @@ endif(INSTALL_DEV)
 
 # More target definitions
 if(MSVC)
+  if(NOT TVM_BUILD_RUNTIME_ONLY)
   target_compile_definitions(tvm PRIVATE -DHalide_EXPORTS)
+  endif()
   target_compile_definitions(tvm_runtime PRIVATE -DHalide_EXPORTS)
+  if(NOT TVM_BUILD_RUNTIME_ONLY)
   target_compile_definitions(tvm PRIVATE -DTVM_EXPORTS)
+  endif()
   target_compile_definitions(tvm_runtime PRIVATE -DTVM_EXPORTS)
+  if(NOT TVM_BUILD_RUNTIME_ONLY)
   target_compile_definitions(nnvm_compiler PRIVATE -DNNVM_EXPORTS)
+  endif()
 endif()
