@@ -27,7 +27,7 @@ elseif(PYTHON)
 
   add_library(vta SHARED ${VTA_RUNTIME_SRCS})
 
-  target_include_directories(vta PUBLIC vta/include)
+  target_include_directories(vta PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vta/include>)
   target_link_libraries(vta PUBLIC dmlc::dmlc)
 
   foreach(__def ${VTA_DEFINITIONS})
