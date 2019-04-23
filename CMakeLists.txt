@@ -420,6 +420,16 @@ else(INSTALL_DEV)
     )
 endif(INSTALL_DEV)
 
+# https://docs.tvm.ai/install/from_source.html#python-package-installation
+install(
+    DIRECTORY python/ topi/python/ nnvm/python/
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/python/site-packages"
+    FILES_MATCHING
+    PATTERN "*"
+    REGEX "\.gitignore$" EXCLUDE
+    REGEX "setup\.py$" EXCLUDE
+)
+
 # More target definitions
 if(MSVC)
   if(NOT TVM_BUILD_RUNTIME_ONLY)
